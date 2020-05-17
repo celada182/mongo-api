@@ -1,8 +1,9 @@
 package com.celada.boot.config;
 
-import com.celada.adapter.in.kafka.Event;
 import com.celada.adapter.in.kafka.ReplyingKafkaConsumer;
 import com.celada.domain.ModelUseCase;
+import com.celada.kafka.Event;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import org.apache.kafka.clients.consumer.ConsumerConfig;
 import org.apache.kafka.clients.producer.ProducerConfig;
 import org.apache.kafka.common.serialization.StringDeserializer;
@@ -83,7 +84,9 @@ public class KafkaConfig {
 
   @Bean
   public ConsumerFactory<String, Event> consumerFactory() {
-    return new DefaultKafkaConsumerFactory<>(consumerConfigs(), new StringDeserializer(), new JsonDeserializer<>(Event.class));
+    JsonDeserializer<Event> deserializer = new JsonDeserializer<>(Event.class, new ObjectMapper());
+    deserializer.addTrustedPackages("*");
+    return new DefaultKafkaConsumerFactory<>(consumerConfigs(), new StringDeserializer(), deserializer);
   }
 
   @Bean

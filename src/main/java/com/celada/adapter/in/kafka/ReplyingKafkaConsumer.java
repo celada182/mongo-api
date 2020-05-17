@@ -2,6 +2,8 @@ package com.celada.adapter.in.kafka;
 
 import com.celada.domain.ModelUseCase;
 import com.celada.domain.entity.Model;
+import com.celada.kafka.Event;
+import com.celada.kafka.EventType;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.kafka.annotation.KafkaListener;
