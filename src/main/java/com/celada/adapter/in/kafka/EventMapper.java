@@ -17,4 +17,11 @@ public class EventMapper {
     }
     return objectMapper.readValue(body, Model.class);
   }
+
+  public String execute(Model model) throws InvalidEventException, IOException {
+    if (model == null) {
+      return null;
+    }
+    return objectMapper.writeValueAsString(model);
+  }
 }

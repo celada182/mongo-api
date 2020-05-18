@@ -1,6 +1,7 @@
 package com.celada.domain;
 
 import com.celada.domain.entity.Model;
+import com.celada.domain.exception.ModelException;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
@@ -17,7 +18,8 @@ public class ModelUseCase {
     modelRepository.create(model);
   }
 
-  public Model read(String id) {
+  public Model read(String id) throws ModelException {
+    log.info("Reading model: {}", id);
     return modelRepository.read(id);
   }
 
