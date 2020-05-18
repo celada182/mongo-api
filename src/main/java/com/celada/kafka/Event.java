@@ -12,5 +12,5 @@ import lombok.NoArgsConstructor;
 public class Event {
 
   private EventType type;
-  private Object body;
+  private String body;
 }

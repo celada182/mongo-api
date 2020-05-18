@@ -10,19 +10,22 @@ import org.springframework.kafka.annotation.KafkaListener;
 import org.springframework.messaging.handler.annotation.SendTo;
 import org.springframework.stereotype.Component;
 
+import java.io.IOException;
+
 @Component
 @Slf4j
 @AllArgsConstructor
 public class ReplyingKafkaConsumer {
 
   private final ModelUseCase modelUseCase;
+  private final EventMapper eventMapper;
 
   @KafkaListener(topics = "${kafka.topic.request}")
   @SendTo
-  public Event listen(Event event) {
+  public Event listen(Event event) throws IOException {
     log.info("Consumer | Event received: {}", event);
     if (EventType.CREATE.equals(event.getType())) {
-      Model model = EventMapper.execute(event.getBody());
+      Model model = eventMapper.execute(event.getBody());
       modelUseCase.create(model);
       return event;
     }

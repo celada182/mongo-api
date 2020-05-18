@@ -1,9 +1,12 @@
 package com.celada.boot.config;
 
+import com.celada.adapter.in.kafka.EventMapper;
 import com.celada.adapter.in.kafka.ReplyingKafkaConsumer;
 import com.celada.domain.ModelUseCase;
 import com.celada.kafka.Event;
+import com.fasterxml.jackson.annotation.JsonInclude.Include;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 import org.apache.kafka.clients.consumer.ConsumerConfig;
 import org.apache.kafka.clients.producer.ProducerConfig;
 import org.apache.kafka.common.serialization.StringDeserializer;
@@ -39,6 +42,19 @@ public class KafkaConfig {
 
   @Value("${kafka.group}")
   private String group;
+
+  @Bean
+  public ObjectMapper objectMapper() {
+    ObjectMapper objectMapper = new ObjectMapper();
+    objectMapper.registerModule(new JavaTimeModule());
+    objectMapper.setSerializationInclusion(Include.NON_NULL);
+    return objectMapper;
+  }
+
+  @Bean
+  public EventMapper eventMapper(ObjectMapper objectMapper) {
+    return new EventMapper(objectMapper);
+  }
 
   @Bean
   public Map<String, Object> producerConfigs() {
@@ -98,8 +114,8 @@ public class KafkaConfig {
   }
 
   @Bean
-  public ReplyingKafkaConsumer replyingKafkaConsumer(ModelUseCase modelUseCase) {
-    return new ReplyingKafkaConsumer(modelUseCase);
+  public ReplyingKafkaConsumer replyingKafkaConsumer(ModelUseCase modelUseCase, EventMapper eventMapper) {
+    return new ReplyingKafkaConsumer(modelUseCase, eventMapper);
   }
 
 }
