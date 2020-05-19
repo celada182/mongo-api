@@ -2,8 +2,10 @@ package com.celada.boot.config;
 
 import com.celada.adapter.in.kafka.EventMapper;
 import com.celada.adapter.in.kafka.KafkaConsumer;
-import com.celada.domain.ModelUseCase;
-import com.celada.kafka.Event;
+import com.celada.adapter.in.kafka.Event;
+import com.celada.adapter.in.kafka.KafkaService;
+import com.celada.domain.EventService;
+import com.celada.domain.EventUseCase;
 import com.fasterxml.jackson.annotation.JsonInclude.Include;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
@@ -37,6 +39,9 @@ public class KafkaConfig {
   @Value("${kafka.bootstrap-servers}")
   private String bootstrapServers;
 
+  @Value("${kafka.topic.request}")
+  private String requestTopic;
+
   @Value("${kafka.topic.response}")
   private String responseTopic;
 
@@ -49,6 +54,14 @@ public class KafkaConfig {
     objectMapper.registerModule(new JavaTimeModule());
     objectMapper.setSerializationInclusion(Include.NON_NULL);
     return objectMapper;
+  }
+
+  @Bean
+  public EventService eventService(
+      ReplyingKafkaTemplate<String, Event, Event> replyingKafkaTemplate,
+      ObjectMapper objectMapper
+  ) {
+    return new KafkaService(replyingKafkaTemplate, objectMapper, requestTopic, responseTopic);
   }
 
   @Bean
@@ -114,8 +127,8 @@ public class KafkaConfig {
   }
 
   @Bean
-  public KafkaConsumer replyingKafkaConsumer(ModelUseCase modelUseCase, EventMapper eventMapper) {
-    return new KafkaConsumer(modelUseCase, eventMapper);
+  public KafkaConsumer replyingKafkaConsumer(EventUseCase eventUseCase, EventMapper eventMapper) {
+    return new KafkaConsumer(eventUseCase, eventMapper);
   }
 
 }

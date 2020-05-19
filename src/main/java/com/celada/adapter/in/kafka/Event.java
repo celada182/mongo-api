@@ -1,4 +1,4 @@
-package com.celada.kafka;
+package com.celada.adapter.in.kafka;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;

@@ -1,10 +1,8 @@
 package com.celada.adapter.in.kafka;
 
-import com.celada.domain.ModelUseCase;
+import com.celada.domain.EventUseCase;
 import com.celada.domain.entity.Model;
 import com.celada.domain.exception.ModelException;
-import com.celada.kafka.Event;
-import com.celada.kafka.EventType;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.kafka.clients.consumer.ConsumerRecord;
@@ -21,7 +19,7 @@ import java.io.IOException;
 @AllArgsConstructor
 public class KafkaConsumer {
 
-  private final ModelUseCase modelUseCase;
+  private final EventUseCase eventUseCase;
   private final EventMapper eventMapper;
 
   @KafkaListener(topics = "${kafka.topic.request}")
@@ -41,14 +39,14 @@ public class KafkaConsumer {
 
   private void read(ConsumerRecord<String, Event> record) throws IOException, ModelException {
     Model request = eventMapper.execute(record.value().getBody());
-    Model model = modelUseCase.read(request.getId());
+    Model model = eventUseCase.read(request.getId());
     record.value().setBody(eventMapper.execute(model));
     log.info("Sending event: {}", record.value());
   }
 
   private void create(ConsumerRecord<String, Event> record) throws IOException {
     Model model = eventMapper.execute(record.value().getBody());
-    modelUseCase.create(model);
+    eventUseCase.create(model);
     log.info("Sending event: {}", record.value());
   }
 
