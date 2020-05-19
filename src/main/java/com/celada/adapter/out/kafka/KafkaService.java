@@ -1,5 +1,7 @@
-package com.celada.adapter.in.kafka;
+package com.celada.adapter.out.kafka;
 
+import com.celada.adapter.in.kafka.Event;
+import com.celada.adapter.in.kafka.EventType;
 import com.celada.domain.EventService;
 import com.celada.domain.entity.Model;
 import com.fasterxml.jackson.core.JsonProcessingException;

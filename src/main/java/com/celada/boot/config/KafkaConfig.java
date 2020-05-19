@@ -3,7 +3,7 @@ package com.celada.boot.config;
 import com.celada.adapter.in.kafka.EventMapper;
 import com.celada.adapter.in.kafka.KafkaConsumer;
 import com.celada.adapter.in.kafka.Event;
-import com.celada.adapter.in.kafka.KafkaService;
+import com.celada.adapter.out.kafka.KafkaService;
 import com.celada.domain.EventService;
 import com.celada.domain.EventUseCase;
 import com.fasterxml.jackson.annotation.JsonInclude.Include;
