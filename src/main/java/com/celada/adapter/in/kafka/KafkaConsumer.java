@@ -24,10 +24,9 @@ public class KafkaConsumer {
 
   @KafkaListener(topics = "${kafka.topic.request}")
   @SendTo
-  public Event listen(ConsumerRecord<String, Event> record, @Header(KafkaHeaders.CORRELATION_ID) byte[] correlation)
+  public Event listen(ConsumerRecord<String, Event> record)
       throws IOException, ModelException {
     log.info("Consumer | Event received: {}", record.value());
-    record.headers().add(KafkaHeaders.CORRELATION_ID, correlation);
     if (EventType.CREATE.equals(record.value().getType())) {
       create(record);
     }

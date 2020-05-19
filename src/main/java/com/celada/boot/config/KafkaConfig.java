@@ -113,9 +113,7 @@ public class KafkaConfig {
 
   @Bean
   public ConsumerFactory<String, Event> consumerFactory() {
-    JsonDeserializer<Event> deserializer = new JsonDeserializer<>(Event.class, new ObjectMapper());
-    deserializer.addTrustedPackages("*");
-    return new DefaultKafkaConsumerFactory<>(consumerConfigs(), new StringDeserializer(), deserializer);
+    return new DefaultKafkaConsumerFactory<>(consumerConfigs(), new StringDeserializer(), new JsonDeserializer<>(Event.class));
   }
 
   @Bean
